@@ -23,13 +23,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask whatAreBombLayers;
 
     private Animator myAnimator;
+    private AudioSource myAudioSource;
 
-    // Start is called before the first frame update
+    [SerializeField] private AudioClip playerDeathSound;
+    [SerializeField] private AudioClip powerUpPickupSound;
+
+    
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody>();
         myAnimator = GetComponent<Animator>();
         myGameManager = FindObjectOfType<GameManager1>();
+        myAudioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -38,9 +43,19 @@ public class PlayerController : MonoBehaviour
         if (hasControl && !isPaused)
         {
             Movement();
+            Rotation();
             UpdateAnimator();
             PlaceBomb();
         }
+    }
+
+    private void Rotation()
+    {
+        if(myRigidbody.velocity != Vector3.zero)
+        {
+            transform.forward = myRigidbody.velocity;
+        }
+    
     }
 
     private void Movement()
@@ -88,6 +103,8 @@ public class PlayerController : MonoBehaviour
         if (!isDead)
         {
             isDead = true;
+
+            myAudioSource.PlayOneShot(playerDeathSound);
 
             hasControl = false;
 
@@ -148,6 +165,11 @@ public class PlayerController : MonoBehaviour
     {
         hasControl = false;
         myAnimator.SetBool("isVictory", true);
+    }
+
+    public void PlayPowerUpPickupSound()
+    {
+        myAudioSource.PlayOneShot(powerUpPickupSound);
     }
 
 }

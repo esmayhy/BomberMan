@@ -8,6 +8,7 @@ public class MainMenuController : MonoBehaviour
     // Start is called before the first frame update
     public void LoadGame()
     {
+        PlayerPrefs.DeleteAll();
         SceneManager.LoadScene("Level01");
     }
 }

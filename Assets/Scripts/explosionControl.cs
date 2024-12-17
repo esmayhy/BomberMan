@@ -70,6 +70,13 @@ public class explosionControl : MonoBehaviour
             Destroy(other.gameObject, .5f);
             Destroy(gameObject);
         }
+
+        if(other.gameObject.tag == "PowerUp")
+        {
+            Destroy(other.gameObject);
+            Destroy(gameObject);
+        }
     }
+
 
 }

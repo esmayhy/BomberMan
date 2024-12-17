@@ -11,6 +11,12 @@ public class bomb : MonoBehaviour
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private float explodeSpeed = 200f;
     private int explodeRange = 1;
+
+    [SerializeField] private AudioClip bombExplodeSound;
+
+    private bool hasExploded = false;
+    [SerializeField] private GameObject bombModel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +28,7 @@ public class bomb : MonoBehaviour
     void Update()
     {
         explosionTimer += Time.deltaTime;
-        if(explosionTimer > explodeDelay)
+        if(explosionTimer > explodeDelay && !hasExploded)
         {
             Explode();
         }
@@ -37,6 +43,7 @@ public class bomb : MonoBehaviour
     }
     public void Explode()
     {
+
         GameObject explosionRight = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         explosionRight.GetComponent<explosionControl>().SetExplosion(Vector3.right, explodeSpeed, explodeRange);
 
@@ -51,7 +58,13 @@ public class bomb : MonoBehaviour
 
         player.BombExploded();
 
-        Destroy(gameObject);
+        GetComponent<AudioSource>().PlayOneShot(bombExplodeSound);
+
+        Destroy(GetComponent<Collider>());
+        bombModel.SetActive(false);
+
+        Destroy(gameObject, 2f);
+        hasExploded = true;
 
     }
 }

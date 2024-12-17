@@ -6,16 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager1 : MonoBehaviour
 {
-    private int lives = 3;
     private int currentScore = 0;
+    private int lives = 3;
     private int maxBombs = 1;
     private int explodeRange = 1;
     private float moveSpeed = 4f;
-    private float speedIncrease = .4f;
 
     [SerializeField] private int bombLimit = 6;
     [SerializeField] private int explodeLimit = 5;
     [SerializeField] private float speedLimit = 6f;
+    private float speedIncrease = .4f;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerParentTransform;
@@ -43,7 +43,18 @@ public class GameManager1 : MonoBehaviour
 
     [SerializeField] private bool isLastLevel = false;
 
-    // Start is called before the first frame update
+    const string CurrentScoreKey = "CurrentScore";
+    const string LivesKey = "Lives";
+    const string MaxBombKey = "MaxBombs";
+    const string ExplodeRangeKey = "ExplodeRange";
+    const string MoveSpeedKey = "MoveSpeed";
+
+
+    private void Awake()
+    {
+        LoadPlayerPrefs();
+    }
+    
     void Start()
     {
         UpdateScore(0);
@@ -159,6 +170,7 @@ public class GameManager1 : MonoBehaviour
             else
             {
                 currentPlayer.PlayVictory();
+                SavePlayerData();
                 Invoke("LoadNextLevel", 3f);
             }
             
@@ -202,5 +214,41 @@ public class GameManager1 : MonoBehaviour
         explodeRange = Mathf.Clamp(explodeRange, 1, explodeLimit);
         UpdateExplodeRangeText();
     }
+
+    private void SavePlayerData()
+    { 
+        PlayerPrefs.SetInt(CurrentScoreKey, currentScore);
+        PlayerPrefs.SetInt(LivesKey, lives);
+        PlayerPrefs.SetInt(MaxBombKey, maxBombs);
+        PlayerPrefs.SetInt(ExplodeRangeKey, explodeRange);
+        PlayerPrefs.SetFloat(MoveSpeedKey, moveSpeed);
+
+    }
+
+    private void LoadPlayerPrefs()
+    {
+        if (PlayerPrefs.HasKey(CurrentScoreKey))
+        {
+            currentScore = PlayerPrefs.GetInt(CurrentScoreKey);
+        }
+        if (PlayerPrefs.HasKey(LivesKey))
+        {
+            lives = PlayerPrefs.GetInt(LivesKey);
+        }
+        if (PlayerPrefs.HasKey(MaxBombKey))
+        {
+            maxBombs = PlayerPrefs.GetInt(MaxBombKey);
+        }
+        if (PlayerPrefs.HasKey(ExplodeRangeKey))
+        {
+            explodeRange = PlayerPrefs.GetInt(ExplodeRangeKey);
+        }
+        if (PlayerPrefs.HasKey(MoveSpeedKey))
+        {
+            moveSpeed = PlayerPrefs.GetFloat(MoveSpeedKey);
+        }
+    }
+
+
 }
 

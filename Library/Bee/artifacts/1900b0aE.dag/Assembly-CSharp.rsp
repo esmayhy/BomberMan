@@ -358,6 +358,7 @@
 "Assets/Scripts/explosionControl.cs"
 "Assets/Scripts/GameManager1.cs"
 "Assets/Scripts/MainMenuController.cs"
+"Assets/Scripts/MusicManager.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/PowerUp.cs"
 "Assets/Scripts/PowerUpSpawner1.cs"

@@ -23,12 +23,14 @@ public class EnemyController : MonoBehaviour
     private bool isDead = false;
 
     private Animator myAnimator;
+    AudioSource myAudioSource;
 
 
     private void Start()
     {
         myRigidBody = GetComponent<Rigidbody>();
         myAnimator = GetComponent<Animator>();
+        myAudioSource = GetComponent<AudioSource>();
 
         if (target.Length == 0)
         {
@@ -50,6 +52,8 @@ public class EnemyController : MonoBehaviour
         if (isMoving)
         {
            myRigidBody.MovePosition(Vector3.MoveTowards(transform.position, target[waypointDestination].position, Time.deltaTime * moveSpeed));
+            transform.LookAt(target[waypointDestination].position);
+
             if(Vector3.Distance(transform.position, target[waypointDestination].position) < 0.1f)
             {
                 isMoving = false;
@@ -123,6 +127,38 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.tag == "Bomb")
+        {
+            isMoving = false;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.gameObject.tag == "Bomb")
+        {
+            isMoving = false;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.tag == "Bomb")
+        {
+            isMoving = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Bomb")
+        {
+            isMoving = true;
+        }
+    }
+
     public void Die()
     {
         if (!isDead)
@@ -131,6 +167,7 @@ public class EnemyController : MonoBehaviour
             GameManager1 myGameManager = FindObjectOfType<GameManager1>();
             myGameManager.UpdateScore(scoreValue);
             myGameManager.EnemyHasDied();
+            myAudioSource.Play();
             Destroy(gameObject, 3f);
             GetComponent<Collider>().enabled = false;
             myAnimator.SetBool("isDead", true);

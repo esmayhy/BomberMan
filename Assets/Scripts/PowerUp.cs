@@ -12,11 +12,13 @@ public class PowerUp : MonoBehaviour
     };
 
     [SerializeField] PowerUps powerUpType;
-  
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
+            FindObjectOfType<PlayerController>().PlayPowerUpPickupSound();
             switch (powerUpType)
             {
                 case PowerUps.MaxBombs:
