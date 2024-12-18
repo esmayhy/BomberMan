@@ -11,10 +11,11 @@ public class GameManager1 : MonoBehaviour
     private int maxBombs = 1;
     private int explodeRange = 1;
     private float moveSpeed = 4f;
+    private int speedCounter = 1;
 
     [SerializeField] private int bombLimit = 6;
     [SerializeField] private int explodeLimit = 5;
-    [SerializeField] private float speedLimit = 6f;
+    [SerializeField] private int speedLimit = 5;
     private float speedIncrease = .4f;
 
     [SerializeField] private GameObject playerPrefab;
@@ -31,6 +32,7 @@ public class GameManager1 : MonoBehaviour
     [SerializeField] private Text maxBombsText;
     [SerializeField] private Text explodeRangeText;
     [SerializeField] private Text speedText;
+    [SerializeField] private Text levelNameText;
 
     private bool isPaused = false;
     [SerializeField] private GameObject pausePanel;
@@ -62,6 +64,7 @@ public class GameManager1 : MonoBehaviour
         UpdateMaxBombsText();
         UpdateExplodeRangeText();
         UpdateSpeedText();
+        UpdateLevelText();
         SpawnPlayer();
 
         enemiesThisLevel = GetEnemyCount();
@@ -100,26 +103,31 @@ public class GameManager1 : MonoBehaviour
 
     private void UpdateLivesText()
     {
-        LivesText.text = "Lives:" + lives.ToString("D2");
+        LivesText.text = lives.ToString("D2");
 
     }
 
     private void UpdateMaxBombsText()
     {
-        maxBombsText.text = "Bombs:" + maxBombs.ToString("D2");
+        maxBombsText.text =  maxBombs.ToString("D2");
 
     }
 
     private void UpdateExplodeRangeText()
     {
-        explodeRangeText.text = "Range:" + explodeRange.ToString("D2");
+        explodeRangeText.text = explodeRange.ToString("D2");
 
     }
 
     private void UpdateSpeedText()
     {
-        speedText.text = "Speed:" + moveSpeed.ToString();
+        speedText.text =  speedCounter.ToString("D2");
 
+    }
+
+    private void UpdateLevelText()
+    {
+        levelNameText.text = SceneManager.GetActiveScene().name;
     }
 
     public void PauseButton()
@@ -197,10 +205,15 @@ public class GameManager1 : MonoBehaviour
 
     public void IncreaseSpeed()
     {
-        moveSpeed += speedIncrease;
-        moveSpeed = Mathf.Clamp(moveSpeed, 4f, speedLimit);
-        UpdateSpeedText();
-        currentPlayer.InitializePlayer(maxBombs, moveSpeed);
+        if(speedCounter < speedLimit)
+        {
+            moveSpeed += speedIncrease;
+            //moveSpeed = Mathf.Clamp(moveSpeed, 4f, speedLimit);
+            speedCounter++;
+            UpdateSpeedText();
+            currentPlayer.InitializePlayer(maxBombs, moveSpeed);
+        }
+        
     }
 
     public int GetExplodeRange()
